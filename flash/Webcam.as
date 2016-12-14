@@ -149,16 +149,15 @@
 		}
 		
 		private function applyGrayScale():void {
-			var matrix : Array = [0.3, 0.59, 0.11, 0, 0,0.3, 0.59, 0.11, 0, 0,0.3, 0.59, 0.11, 0, 0, 0, 0, 0, 1, 0];
-
+			var matrix:Array = [0.3, 0.59, 0.11, 0, 0,0.3, 0.59, 0.11, 0, 0,0.3, 0.59, 0.11, 0, 0, 0, 0, 0, 1, 0];
 			var filter:ColorMatrixFilter = new ColorMatrixFilter(matrix);
 
-			var bitmapData:BitmapData = new BitmapData(camera.width, camera.height, false, 0);
-
-			var rectangle:Rectangle = new Rectangle(0, 0, bitmapData.width, bitmapData.height);
-			var point:Point = new Point(0, 0);
+			var bitmapData:BitmapData = new BitmapData(dest_width, dest_height, false, 0);
 
 			var canvasBitmap:Bitmap = new Bitmap(bitmapData);
+			canvasBitmap.width = video_width;
+			canvasBitmap.height = video_height;
+			
 			addChild(canvasBitmap);
 
 			var refreshTimer:Timer = new Timer(fps);
@@ -168,7 +167,7 @@
 			function imageRefresh(e:Event)
 			{	 
 				bitmapData.draw(video);
-				bitmapData.applyFilter(bitmapData, rectangle, point, filter);
+				bitmapData.applyFilter(bitmapData, new Rectangle(0, 0, bitmapData.width, bitmapData.height), new Point(0, 0), filter);
 			}
 		}
 		
