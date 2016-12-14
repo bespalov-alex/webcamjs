@@ -59,6 +59,7 @@ var Webcam = {
 		flashNotDetectedText: 'ERROR: No Adobe Flash Player detected.  Webcam.js relies on Flash for browsers that do not support getUserMedia (like yours).',
 		noInterfaceFoundText: 'No supported webcam interface found.',
 		unfreeze_snap: true    // Whether to unfreeze the camera after snap (defaults to true)
+		grayscale: false // grayscale video output
 	},
 
 	errors: {

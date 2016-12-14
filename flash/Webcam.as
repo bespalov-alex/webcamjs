@@ -18,6 +18,8 @@
 	import flash.media.Video;
 	import flash.external.ExternalInterface;
 	import flash.net.*;
+	import flash.filters.*;
+	import flash.geom.*;
 	import flash.system.Security;
 	import flash.system.SecurityPanel;
 	import flash.media.Sound;
@@ -40,6 +42,7 @@
 		private var image_format:String;
 		private var fps:int;
 		private var flip_horiz:Boolean;
+		private var grayscale:Boolean;
 		
 		public function Webcam() {
 			// class constructor
@@ -54,6 +57,7 @@
 			image_format = flashvars.image_format;
 			fps = Math.floor( flashvars.fps );
 			flip_horiz = flashvars.flip_horiz == "true";
+			grayscale = flashvars.grayscale == "true";
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			// stage.scaleMode = StageScaleMode.EXACT_FIT; // Note: This breaks HD capture
@@ -136,8 +140,35 @@
 				}
 				case 'Camera.Unmuted': {
 					trace("Camera allowed");
+					if(grayscale) {
+						applyGrayScale();
+					}
 					break;
 				}
+			}
+		}
+		
+		private function applyGrayScale():void {
+			var matrix : Array = [0.3, 0.59, 0.11, 0, 0,0.3, 0.59, 0.11, 0, 0,0.3, 0.59, 0.11, 0, 0, 0, 0, 0, 1, 0];
+
+			var filter:ColorMatrixFilter = new ColorMatrixFilter(matrix);
+
+			var bitmapData:BitmapData = new BitmapData(camera.width, camera.height, false, 0);
+
+			var rectangle:Rectangle = new Rectangle(0, 0, bitmapData.width, bitmapData.height);
+			var point:Point = new Point(0, 0);
+
+			var canvasBitmap:Bitmap = new Bitmap(bitmapData);
+			addChild(canvasBitmap);
+
+			var refreshTimer:Timer = new Timer(fps);
+			refreshTimer.start();
+			refreshTimer.addEventListener(TimerEvent.TIMER, imageRefresh);
+
+			function imageRefresh(e:Event)
+			{	 
+				bitmapData.draw(video);
+				bitmapData.applyFilter(bitmapData, rectangle, point, filter);
 			}
 		}
 		
