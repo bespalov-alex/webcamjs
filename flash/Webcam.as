@@ -157,6 +157,10 @@
 			var canvasBitmap:Bitmap = new Bitmap(bitmapData);
 			canvasBitmap.width = video_width;
 			canvasBitmap.height = video_height;
+			if (flip_horiz) {
+				canvasBitmap.scaleX *= -1;
+				canvasBitmap.x = canvasBitmap.width + canvasBitmap.x;
+			}
 			
 			addChild(canvasBitmap);
 
